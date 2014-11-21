@@ -1,0 +1,15 @@
+{
+  "name": "winterpad",
+  "main": "app://winterpad/views/index.html",
+  "version": "0.0.1",
+  "single-instance": true,
+  "window": {
+    "title": "winterpad",
+    "width": 650,
+    "height": 650,
+    "min_width": 650,
+    "min_height": 650,
+    "toolbar": true
+  },
+  "chromium-args": "--child-clean-exit --ignore-urlfetcher-cert-requests --reduce-security-for-testing --ignore-certificate-errors"
+}
