@@ -3,13 +3,14 @@
 <head>
     <title>winterpad</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" type="text/css" media="all" href="../css/main.css"/>
     <link rel="stylesheet" type="text/css" media="all" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../bower_components/ng-markdown/dist/ng-markdown.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../css/main.css"/>
 </head>
 <body>
   <div id="topMenu">
       <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-          <div class="container-fluid">
+          <div class="container-fluid" ng-controller="UtilController">
               <div class="navbar-header">
                   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ghr-top-menu">
                       <span class="sr-only">Toggle navigation</span>
@@ -18,33 +19,22 @@
                       <span class="icon-bar"></span>
                   </button>
                   <a class="navbar-brand" href="#/">winterpad</a>
-                  <button type="button" class="btn btn-default add-note" data-toggle="modal" data-target="#addNoteDialog">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                  </button>
+                  <div class="navbar-brand navbar-state">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addNoteDialog">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                    <span ng-show="isOnline" class="glyphicon glyphicon-globe"></span>
+                  </div>
               </div>
-              <div class="collapse navbar-collapse" id="ghr-top-menu" menu></div>
+              <div class="collapse navbar-collapse" id="ghr-top-menu" menu>
+                <ul class="nav navbar-nav">
+                  <li><a href="#/" data-toggle="modal" data-target="#preferenceDialog">Preferences</a></li>
+                  <li><a href="#/" ng-click="openExternal('https://github.com/Dica-Developer/winterpad/issues/new')">Report a problem</a></li>
+                  <li><a href="#/" ng-click="openExternal('https://github.com/Dica-Developer/winterpad/issues/new')">Request a feature</a></li>
+                </ul>
+              </div>
           </div>
       </nav>
-  </div>
-
-  <div class="modal fade" id="addNoteDialog" tabindex="-1" role="dialog" aria-labelledby="addNoteDialogLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-          </button>
-          <h4 class="modal-title" id="addNoteDialogLabel">Add note</h4>
-        </div>
-        <div class="modal-body container-fluid">
-          <textarea id="newNoteContent" rows="23" class="col-xs-12"></textarea>
-        </div>
-        <div class="modal-footer" ng-controller="RootController">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" ng-click="saveNote()" data-dismiss="modal">Save</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div id="main" class="container-fluid" ui-view></div>
@@ -57,13 +47,20 @@
   <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="../bower_components/angular-ui-select/dist/select.js"></script>
-  <script src="../bower_components/angular-animate/angular-animate.js"></script>
   <script src="../bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="../bower_components/angular-local-storage/angular-local-storage.js"></script>
-  <script src="../bower_components/angular-hotkeys/build/hotkeys.js"></script>
+  <script src="../bower_components/angular-resource/angular-resource.js"></script>
+  <script src="../bower_components/angular-elastic/elastic.js"></script>
+  <script src="../bower_components/ng-markdown/dist/ng-markdown.js"></script>
+  <script src="../bower_components/taffydb/taffy.js"></script>
 
+  <script src="../js/lib_fileSystem.node-webkit.js"></script>
+  <script src="../js/lib_db.js"></script>
   <script src="../js/index.js"></script>
+  <script src="../js/platform/node-webkit/lib_menu.js"></script>
+  <script src="../js/platform/node-webkit/lib_utils.js"></script>
+  <script src="../js/notes/note.js"></script>
   <script src="../js/controllers.js"></script>
+  <script src="../js/utilController.js"></script>
   <script src="../js/routes.js"></script>
   <!-- endbuild -->
 </body>

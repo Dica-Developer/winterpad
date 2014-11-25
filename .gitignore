@@ -5,3 +5,4 @@ app/bower_components/
 npm-debug.log
 dist/
 app/css/main.css
+resources/

@@ -8,7 +8,7 @@
       <span class="input-group-addon">
         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
       </span>
-      <input class="form-control" type="text" ng-model="filterValue" placeholder="search"></input>
+      <input class="form-control" type="text" ng-model="searchText" placeholder="search"></input>
     </div>
   </div>
 </div>
@@ -16,27 +16,83 @@
 <div class="row">
   <div class="col-xs-12">
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-    <div ng-repeat="(key, value) in notes | filter:filterValue" class="panel panel-default">
-      <div class="panel-heading" role="tab" id="heading_{{value.id}}">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{{value.id}}" aria-expanded="false" aria-controls="collapse_{{value.id}}">
-          {{value.title}}
+    <div ng-repeat="note in notes | filter:searchText track by note.id" class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading_{{note.id}}">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{{note.id}}" aria-expanded="false" aria-controls="collapse_{{note.id}}">
+          {{note.title}}
         </a>
+        <span ng-show="note.localOnly || note.editedLocal" class="glyphicon glyphicon-transfer"></span>
         <div class="btn-group btn-group-xs pull-right" role="group">
-          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#updateNoteDialog" data-note="{{value.id}}" ng-click="openDialogForNoteUpdate($event)">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#updateNoteDialog" ng-click="openDialogForNoteUpdate(note.id, note.content)">
+            <span class="glyphicon glyphicon-pencil"></span>
           </button>
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteNoteDialog" data-note="{{value.id}}" ng-click="openDialogForNoteDeletion($event)">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteNoteDialog" ng-click="openDialogForNoteDeletion(note.id)">
+            <span class="glyphicon glyphicon-remove"></span>
           </button>
         </div>
       </div>
-      <div id="collapse_{{value.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{value.id}}">
-        <div id="noteContent_{{value.id}}" class="panel-body">
-          {{value.content}}
+      <div id="collapse_{{note.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{note.id}}">
+        <div class="panel-body">
+          <ng-markdown-preview ng-model="note.content"></ng-markdown-preview>
         </div>
       </div>
     </div>
   </div>
+  </div>
+</div>
+
+<div class="modal fade" id="preferenceDialog" tabindex="-1" role="dialog" aria-labelledby="preferenceDialogLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="preferenceDialogLabel">Preferences</h4>
+      </div>
+      <form role="form">
+        <div class="modal-body container-fluid">
+          <div class="form-group">
+            <label for="notesRestUrl">Owncloud notes application rest URL</label>
+            <input type="text" ng-model="notesRestUrl" class="form-control" id="notesRestUrl" placeholder="Enter URL e.g. https://<hostname>/owncloud/index.php/apps/notes/api/v0.2/notes">
+          </div>
+          <div class="form-group">
+            <label for="notesRestUsername">Password</label>
+            <input type="text" ng-model="notesRestUsername" class="form-control" id="notesRestUsername" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="notesRestPassword">Password</label>
+            <input type="password" ng-model="notesRestPassword" class="form-control" id="notesRestPassword" placeholder="Password">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" ng-click="savePreferences(notesRestUrl, notesRestUsername, notesRestPassword)" data-dismiss="modal">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addNoteDialog" tabindex="-1" role="dialog" aria-labelledby="addNoteDialogLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="addNoteDialogLabel">Add note</h4>
+      </div>
+      <div class="modal-body container-fluid">
+        <div class="wmd-button-bar"></div>
+        <ng-markdown ng-model="newNoteContent"></ng-markdown>
+        <div class="wmd-preview"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="saveNote(newNoteContent)" data-dismiss="modal">Save</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -72,7 +128,7 @@
         <div class="modal-body container-fluid">
           <textarea id="noteContentForUpdate" rows="23" class="col-xs-12"></textarea>
         </div>
-        <div class="modal-footer" ng-controller="RootController">
+        <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" ng-click="updateNote()" data-dismiss="modal">Update</button>
         </div>
