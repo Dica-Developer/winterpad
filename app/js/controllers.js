@@ -89,11 +89,24 @@
           if (Utils.isOnline() && null !== Note) {
             var notes = Note.query(function() {
               $scope.error = false;
+              var remoteNoteIds = _.pluck(notes, 'id');
+              var localNoteIds = notesDb.query().select('id');
+              var localNoteIdsThatAreNotRemote = _.difference(localNoteIds, remoteNoteIds);
+              var localNotesThatAreNotRemote = notesDb.query({
+                id: localNoteIdsThatAreNotRemote
+              }).get();
+              var notesViewNeedsUpdate = ($scope.notes.length < 1 && notes.length > 1);
+              localNotesThatAreNotRemote.forEach(function(possibleNoteToRemove) {
+                if (!possibleNoteToRemove.localOnly) {
+                  possibleNoteToRemove.deleteIt = true;
+                  notesDb.query.merge(possibleNoteToRemove, 'id');
+                  notesViewNeedsUpdate = true;
+                }
+              });
               notesDb.query.merge(notes, 'id');
-              if ($scope.notes.length < 1 && notes.length > 1) {
+              if (notesViewNeedsUpdate) {
                 updateNoteView();
               }
-              // TODO remove remote deleted notes
               setTimeout(syncNotes, 600000);
             }, function(error) {
               $scope.error = true;
