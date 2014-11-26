@@ -41,7 +41,9 @@
             setInterval(function() {
               if (Utils.isOnline() && null !== Note) {
                 var notes = notesDb.query({
-                  localOnly: true
+                  localOnly: {
+                    'is': true
+                  }
                 }).get();
                 var i = 0;
                 for (i = 0; i < notes.length; i++) {
@@ -54,7 +56,9 @@
             setInterval(function() {
               if (Utils.isOnline() && null !== Note) {
                 var notes = notesDb.query({
-                  deleteIt: true
+                  deleteIt: {
+                    'is': true
+                  }
                 }).get();
                 var i = 0;
                 for (i = 0; i < notes.length; i++) {
@@ -67,7 +71,9 @@
             setInterval(function() {
               if (Utils.isOnline() && null !== Note) {
                 var notes = notesDb.query({
-                  editedLocal: true
+                  editedLocal: {
+                    'is': true
+                  }
                 }).get();
                 var i = 0;
                 for (i = 0; i < notes.length; i++) {
@@ -136,7 +142,9 @@
           var id = parseInt($('#noteContentForUpdate').data('note'), 10);
           var content = $('#noteContentForUpdate').val();
           var note = notesDb.query({
-            id: id
+            id: {
+              'is': id
+            }
           }).first();
           note.content = content;
           note.title = content.split('\n', 1)[0];
@@ -151,11 +159,15 @@
         $scope.deleteNote = function() {
           var id = parseInt($('#noteIdToDelete').text(), 10);
           var note = notesDb.query({
-            id: id
+            id: {
+              'is': id
+            }
           }).first();
           if (note.localOnly) {
             notesDb.query({
-              id: note.id
+              id: {
+                'is': note.id
+              }
             }).remove();
           } else {
             note.deleteIt = true;
@@ -202,7 +214,9 @@
             content: note.content
           }).$promise.then(function(result) {
             notesDb.query({
-              id: note.id
+              id: {
+                'is': note.id
+              }
             }).remove();
             notesDb.query.merge(result, 'id');
             updateNoteView();
@@ -216,12 +230,16 @@
             id: note.id
           }).$promise.then(function() {
             notesDb.query({
-              id: note.id
+              id: {
+                'is': note.id
+              }
             }).remove();
           }, function(error) {
             if (error.status === 404) {
               notesDb.query({
-                id: note.id
+                id: {
+                  'is': note.id
+                }
               }).remove();
             } else {
               console.warn('Error on remote note deletion. ', error);
@@ -242,7 +260,9 @@
             if (error.status === 404) {
               console.warn('Note deleted on server. Delete it now locally.');
               notesDb.query({
-                id: note.id
+                id: {
+                  'is': note.id
+                }
               }).remove();
             } else {
               console.warn('Error on remote note update. ', error);
