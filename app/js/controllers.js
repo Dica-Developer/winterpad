@@ -135,7 +135,7 @@
           };
           notesDb.query.insert(note);
           updateNoteView();
-          $('#newNoteContent').val('');
+          $scope.newNoteContent = '';
         };
 
         $scope.updateNote = function() {
