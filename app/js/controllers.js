@@ -1,4 +1,4 @@
-/*global angular, $, window*/
+/*global angular, $, window, _*/
 (function(angular, $) {
   'use strict';
 
@@ -28,14 +28,18 @@
           $scope.notesRestPassword = configDb.query({
             key: 'notesRestPassword'
           }).select('value')[0];
-          Note = noteService($scope.notesRestUrl, $scope.notesRestUsername, $scope.notesRestPassword);
+          if (_.isString($scope.notesRestUrl) && !_.isEmpty($scope.notesRestUrl.trim())) {
+            Note = noteService($scope.notesRestUrl, $scope.notesRestUsername, $scope.notesRestPassword);
+          } else {
+            Note = null;
+          }
 
           notesDb.init('winterpad.notes.db', function() {
             syncNotes();
 
             // push local notes to remote
             setInterval(function() {
-              if (Utils.isOnline()) {
+              if (Utils.isOnline() && null !== Note) {
                 var notes = notesDb.query({
                   localOnly: true
                 }).get();
@@ -48,7 +52,7 @@
 
             // push local deleted notes to remote
             setInterval(function() {
-              if (Utils.isOnline()) {
+              if (Utils.isOnline() && null !== Note) {
                 var notes = notesDb.query({
                   deleteIt: true
                 }).get();
@@ -61,7 +65,7 @@
 
             // push local edited notes to remote
             setInterval(function() {
-              if (Utils.isOnline()) {
+              if (Utils.isOnline() && null !== Note) {
                 var notes = notesDb.query({
                   editedLocal: true
                 }).get();
@@ -82,7 +86,7 @@
 
         function syncNotes() {
           updateNoteView();
-          if (Utils.isOnline()) {
+          if (Utils.isOnline() && null !== Note) {
             var notes = Note.query(function() {
               $scope.error = false;
               notesDb.query.merge(notes, 'id');
@@ -173,7 +177,11 @@
           $scope.notesRestUrl = notesRestUrl;
           $scope.notesRestUsername = notesRestUsername;
           $scope.notesRestPassword = notesRestPassword;
-          Note = noteService($scope.notesRestUrl, $scope.notesRestUsername, $scope.notesRestPassword);
+          if (_.isString($scope.notesRestUrl) && !_.isEmpty($scope.notesRestUrl.trim())) {
+            Note = noteService($scope.notesRestUrl, $scope.notesRestUsername, $scope.notesRestPassword);
+          } else {
+            Note = null;
+          }
         };
 
         function pushCreatedNote(note) {
