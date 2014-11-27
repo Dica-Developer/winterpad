@@ -38,6 +38,17 @@
           fileWriter.onerror = function(e) {
             console.error('Writing file ' + filePath + ' failed: ' + e);
           };
+          var fileBlob;
+          try {
+            fileBlob = new Blob([fileContent], {
+              type: 'text/plain'
+            });
+          } catch (e) {
+            // android 4.1
+            var bb = new window.WebKitBlobBuilder();
+            bb.append(fileContent);
+            fileBlob = bb.getBlob('text/plain');
+          }
           fileWriter.write(fileBlob);
         }, function(error) {
           console.error(error);
