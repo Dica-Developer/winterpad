@@ -1,12 +1,8 @@
-/*global console, window, cordova, FileReader, webkitResolveLocalFileSystemURL*/
+/*global console, window, cordova, FileReader, webkitResolveLocalFileSystemURL, Blob*/
 (function(window) {
   'use strict';
 
   function Filesystem() {
-
-    var dataDirectory = cordova.file.dataDirectory;
-
-    var resolveLocalFileSystemURL = window.resolveLocalFileSystemURL || webkitResolveLocalFileSystemURL;
 
     function readFileInDirectory(directory, filePath, fileContentCallback, errorCallback) {
       directory.getFile(filePath, {}, function(fileEntry) {
@@ -21,14 +17,14 @@
     }
 
     this.readFile = function(filePath, fileContentCallback, errorCallback) {
-      resolveLocalFileSystemURL(dataDirectory, function(directory) {
+      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(directory) {
         readFileInDirectory(directory, filePath, fileContentCallback, errorCallback);
       }, function(error) {
         console.log(error);
       });
     };
 
-    function writeFileInDirectory(directory, filePath, fileBlob, successCallback) {
+    function writeFileInDirectory(directory, filePath, fileContent, successCallback) {
       directory.getFile(filePath, {
         create: true
       }, function(fileEntry) {
@@ -51,14 +47,15 @@
       });
     }
 
-    this.writeFile = function(filePath, fileBlob, successCallback) {
-      resolveLocalFileSystemURL(dataDirectory, function(directory) {
-        writeFileInDirectory(directory, filePath, fileBlob, successCallback);
+    this.writeFile = function(filePath, fileContent, successCallback) {
+      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(directory) {
+        writeFileInDirectory(directory, filePath, fileContent, successCallback);
       }, function(error) {
         console.error(error);
       });
     };
   }
 
-  window.FileSystem = new Filesystem();
+  window.winterpad = window.winterpad || {};
+  window.winterpad.FileSystem = window.winterpad.FileSystem || new Filesystem();
 })(window);

@@ -12,6 +12,8 @@
     'ui.bootstrap',
     'ngSanitize',
     'ngResource',
-    'ngMarkdown'
+    'ngMarkdown',
+    'fsCordova'
   ]);
+
 }(angular));

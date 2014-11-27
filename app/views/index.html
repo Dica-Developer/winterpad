@@ -39,6 +39,7 @@
 
   <div id="main" class="container-fluid" ui-view></div>
   <!-- build:js js/index.js -->
+  <script type="text/javascript" src="../cordova.js"></script>
   <script src="../bower_components/moment/moment.js"></script>
   <script src="../bower_components/lodash/dist/lodash.js"></script>
   <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -53,11 +54,12 @@
   <script src="../bower_components/ng-markdown/dist/ng-markdown.js"></script>
   <script src="../bower_components/taffydb/taffy.js"></script>
 
-  <script src="../js/platform/node-webkit/lib_fileSystem.js"></script>
+  <script src="../js/platform/cordova/lib_fileSystem.js"></script>
   <script src="../js/lib_db.js"></script>
   <script src="../js/index.js"></script>
-  <script src="../js/platform/node-webkit/lib_menu.js"></script>
-  <script src="../js/platform/node-webkit/lib_utils.js"></script>
+  <script src="../js/platform/cordova/lib_cordova.js"></script>
+  <script src="../js/platform/cordova/lib_menu.js"></script>
+  <script src="../js/platform/cordova/lib_utils.js"></script>
   <script src="../js/notes/note.js"></script>
   <script src="../js/controllers.js"></script>
   <script src="../js/utilController.js"></script>
