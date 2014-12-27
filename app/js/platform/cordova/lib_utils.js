@@ -11,8 +11,7 @@
             console.error('Should open the url ' + url + ' i a browser.');
           },
           isOnline: function() {
-            // return navigator.onLine;
-            return true;
+            return navigator.connection.type !== Connection.NONE;
           }
         };
       }
