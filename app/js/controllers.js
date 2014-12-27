@@ -1,4 +1,4 @@
-/*global angular, $, window, _*/
+/*global angular, $, window, _, Mousetrap*/
 (function(angular, $) {
   'use strict';
 
@@ -15,6 +15,13 @@
         $scope.error = false;
         $scope.scope = $scope;
         $scope.notes = [];
+
+        $('#noteMainSearchField').focus();
+
+        Mousetrap.bind('/', function() {
+          $('#noteMainSearchField').focus();
+          return false;
+        });
 
         var notesDb = new window.Db();
         var configDb = new window.Db();
