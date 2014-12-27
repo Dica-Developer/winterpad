@@ -8,7 +8,7 @@
       <span class="input-group-addon">
         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
       </span>
-      <input class="form-control" type="text" ng-model="searchText" placeholder="search"></input>
+      <input id="noteMainSearchField" class="form-control" type="text" ng-model="searchText" placeholder="search"></input>
     </div>
   </div>
 </div>
@@ -85,7 +85,7 @@
       </div>
       <div class="modal-body container-fluid">
         <div class="wmd-button-bar"></div>
-        <ng-markdown ng-model="newNoteContent"></ng-markdown>
+        <ng-markdown id="newNoteContentId" ng-model="newNoteContent"></ng-markdown>
         <div class="wmd-preview"></div>
       </div>
       <div class="modal-footer">

@@ -20,7 +20,7 @@
                   </button>
                   <a class="navbar-brand" href="#/">winterpad</a>
                   <div class="navbar-brand navbar-state">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addNoteDialog">
+                    <button type="button" class="btn btn-default" ng-click="focusElement('newNoteContentId')" data-toggle="modal" data-target="#addNoteDialog">
                       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                     <span ng-show="isOnline" class="glyphicon glyphicon-globe"></span>
@@ -52,6 +52,7 @@
   <script src="../bower_components/angular-elastic/elastic.js"></script>
   <script src="../bower_components/ng-markdown/dist/ng-markdown.js"></script>
   <script src="../bower_components/taffydb/taffy.js"></script>
+  <script src="../bower_components/mousetrap/mousetrap.js"></script>
 
   <script src="../js/platform/node-webkit/lib_fileSystem.js"></script>
   <script src="../js/lib_db.js"></script>
