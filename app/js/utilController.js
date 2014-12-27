@@ -1,5 +1,5 @@
-/*global angular*/
-(function(angular) {
+/*global angular, $*/
+(function(angular, $) {
   'use strict';
 
   /* Controllers */
@@ -17,6 +17,12 @@
         $interval(function() {
           $scope.isOnline = Utils.isOnline();
         }, 5000);
+
+        $scope.focusElement = function(element) {
+          setTimeout(function() {
+            $('#' + element).focus();
+          }, 500);
+        };
       }
     ]);
-}(angular));
+}(angular, $));
