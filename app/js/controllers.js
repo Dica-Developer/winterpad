@@ -191,6 +191,9 @@
         $scope.openDialogForNoteUpdate = function(noteId, noteContent) {
           $('#noteContentForUpdate').data('note', noteId);
           $('#noteContentForUpdate').val(noteContent);
+          setTimeout(function() {
+            $('#noteContentForUpdate').focus();
+          }, 500);
         };
 
         $scope.savePreferences = function(notesRestUrl, notesRestUsername, notesRestPassword) {
