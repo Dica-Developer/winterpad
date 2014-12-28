@@ -34,6 +34,11 @@
       <div id="collapse_{{note.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_{{note.id}}">
         <div class="panel-body">
           <ng-markdown-preview ng-model="note.content"></ng-markdown-preview>
+          <div class="btn-group btn-group-xs pull-right" role="group">
+            <button ng-controller="UtilController" type="button" class="btn btn-default" data-toggle="modal" ng-click="share(note.content)">
+              <span class="glyphicon glyphicon-share"></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

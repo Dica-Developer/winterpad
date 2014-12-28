@@ -17,6 +17,10 @@
         $interval(function() {
           $scope.isOnline = Utils.isOnline();
         }, 5000);
+
+        $scope.share = function(text) {
+          Utils.share(text);
+        };
       }
     ]);
 }(angular));

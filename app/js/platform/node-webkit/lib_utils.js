@@ -13,7 +13,8 @@
           },
           isOnline: function() {
             return navigator.onLine;
-          }
+          },
+          share: function(text) {}
         };
       }
     ]);
