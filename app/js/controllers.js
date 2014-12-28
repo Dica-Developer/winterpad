@@ -206,6 +206,7 @@
               $scope.notesRestPassword = notesRestPassword;
               if (_.isString($scope.notesRestUrl) && !_.isEmpty($scope.notesRestUrl.trim())) {
                 Note = noteService($scope.notesRestUrl, $scope.notesRestUsername, $scope.notesRestPassword);
+                syncNotes();
               } else {
                 Note = null;
               }
