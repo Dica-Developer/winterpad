@@ -11,5 +11,5 @@
     "min_height": 650,
     "toolbar": true
   },
-  "chromium-args": "--child-clean-exit --ignore-urlfetcher-cert-requests --reduce-security-for-testing --ignore-certificate-errors"
+  "chromium-args": "--child-clean-exit"
 }
