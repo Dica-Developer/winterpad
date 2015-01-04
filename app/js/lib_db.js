@@ -19,7 +19,7 @@
   Db.prototype.save = function() {
     var db = this;
     this.lock = true;
-    var dbContent = this.query().order('artist asec, album asec, year asec, track asec, title asec').get();
+    var dbContent = this.query().get();
     this.query().remove();
     this.query.insert(dbContent);
     var serializedDb = JSON.stringify(dbContent),
