@@ -14,7 +14,7 @@
     "lodash": ">=2.4.1",
     "angular-sanitize": ">=1.2.16",
     "angular-ui-select": ">=0.7.0",
-    "dica-developer-fileutil": "~1.0.4",
+    "dica-developer-fileutil": "~1.0.5",
     "taffydb": "*"
   },
   "resolutions": {
