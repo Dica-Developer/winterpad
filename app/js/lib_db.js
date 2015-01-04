@@ -25,7 +25,7 @@
     var serializedDb = JSON.stringify(dbContent),
       dbName = this.getDbName();
 
-    root.winterpad.FileSystem.writeFile(
+    root.dica.fileUtil.writeFile(
       dbName,
       serializedDb,
       function() {
@@ -41,7 +41,7 @@
 
     this.setDbName(_dbName);
 
-    root.winterpad.FileSystem.readFile(_dbName, function(dbContent) {
+    root.dica.fileUtil.readFile(_dbName, function(dbContent) {
       try {
         _db.query = new TAFFY(JSON.parse(dbContent));
       } catch (error) {
