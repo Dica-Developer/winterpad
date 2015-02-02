@@ -18,8 +18,8 @@
             $scope.scope = $scope;
             $scope.notes = [];
 
-            var notesDb = new window.Db();
-            var configDb = new window.Db();
+            var notesDb = new window.dica.Db();
+            var configDb = new window.dica.Db();
             configDb.init('winterpad.configuration.db', function() {
               $scope.notesRestUrl = configDb.query({
                 key: 'notesRestUrl'
