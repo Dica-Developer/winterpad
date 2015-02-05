@@ -8,7 +8,7 @@
       function() {
         return {
           openExternal: function(url) {
-            console.error('Should open the url ' + url + ' i a browser.');
+            window.open(url, '_system');
           },
           isOnline: function() {
             return navigator.connection.type !== Connection.NONE;
