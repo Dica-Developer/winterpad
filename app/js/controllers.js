@@ -38,53 +38,54 @@
 
               notesDb.init('winterpad.notes.db', function() {
                 syncNotes();
-
-                // push local notes to remote
-                setInterval(function() {
-                  if (Utils.isOnline() && null !== Note) {
-                    var notes = notesDb.query({
-                      localOnly: {
-                        'is': true
-                      }
-                    }).get();
-                    var i = 0;
-                    for (i = 0; i < notes.length; i++) {
-                      pushCreatedNote(notes[i]);
-                    }
-                  }
-                }, 60000);
-
-                // push local deleted notes to remote
-                setInterval(function() {
-                  if (Utils.isOnline() && null !== Note) {
-                    var notes = notesDb.query({
-                      deleteIt: {
-                        'is': true
-                      }
-                    }).get();
-                    var i = 0;
-                    for (i = 0; i < notes.length; i++) {
-                      pushDeletedNote(notes[i]);
-                    }
-                  }
-                }, 60000);
-
-                // push local edited notes to remote
-                setInterval(function() {
-                  if (Utils.isOnline() && null !== Note) {
-                    var notes = notesDb.query({
-                      editedLocal: {
-                        'is': true
-                      }
-                    }).get();
-                    var i = 0;
-                    for (i = 0; i < notes.length; i++) {
-                      pushEditedNote(notes[i]);
-                    }
-                  }
-                }, 60000);
               });
             });
+
+
+            function addCreatedNotesToRemote() {
+              var notes = null;
+              var i = 0;
+              if (Utils.isOnline() && null !== Note) {
+                notes = notesDb.query({
+                  localOnly: {
+                    'is': true
+                  }
+                }).get();
+                for (i = 0; i < notes.length; i++) {
+                  pushCreatedNote(notes[i]);
+                }
+              }
+            }
+
+            function removeDeletedNotesFromRemote() {
+              var notes = null;
+              var i = 0;
+              if (Utils.isOnline() && null !== Note) {
+                notes = notesDb.query({
+                  deleteIt: {
+                    'is': true
+                  }
+                }).get();
+                for (i = 0; i < notes.length; i++) {
+                  pushDeletedNote(notes[i]);
+                }
+              }
+            }
+
+            function updateEditedNotesOnRemote() {
+              var notes = null;
+              var i = 0;
+              if (Utils.isOnline() && null !== Note) {
+                notes = notesDb.query({
+                  editedLocal: {
+                    'is': true
+                  }
+                }).get();
+                for (i = 0; i < notes.length; i++) {
+                  pushEditedNote(notes[i]);
+                }
+              }
+            }
 
             function updateNoteView() {
               $scope.notes = notesDb.query(function() {
@@ -94,6 +95,9 @@
 
             function syncNotes() {
               updateNoteView();
+              addCreatedNotesToRemote();
+              removeDeletedNotesFromRemote();
+              updateEditedNotesOnRemote();
               if (Utils.isOnline() && null !== Note) {
                 var notes = Note.query(function() {
                   $scope.error = false;
@@ -138,6 +142,7 @@
               notesDb.query.insert(note);
               updateNoteView();
               $scope.newNoteContent = '';
+              addCreatedNotesToRemote();
             };
 
             $scope.updateNote = function() {
@@ -154,6 +159,9 @@
                 note.editedLocal = true;
               }
               notesDb.query.merge(note, 'id');
+              if (!note.localOnly) {
+                updateEditedNotesOnRemote();
+              }
               $('#noteContentForUpdate').val('');
               $('#noteContentForUpdate').data('note', '');
             };
@@ -177,6 +185,9 @@
               }
               updateNoteView();
               $('#noteIdToDelete').text('');
+              if (!note.localOnly) {
+                removeDeletedNotesFromRemote();
+              }
             };
 
             $scope.openDialogForNoteDeletion = function(noteId) {
