@@ -1,5 +1,5 @@
 /*global angular, $, window, _*/
-'CordovaService', (function(angular, $) {
+'CordovaService', (function (angular, $) {
   'use strict';
 
   angular.module('winterpad')
@@ -11,8 +11,8 @@
       'Utils',
       'CordovaService',
       'Menu',
-      function($scope, $http, $state, noteService, Utils, CordovaService) {
-        CordovaService.ready.then(function resolved(resp) {
+      function ($scope, $http, $state, noteService, Utils, CordovaService) {
+        CordovaService.ready.then(function resolved() {
             var Note = null;
             $scope.error = false;
             $scope.scope = $scope;
@@ -20,7 +20,7 @@
 
             var notesDb = new window.dica.Db();
             var configDb = new window.dica.Db();
-            configDb.init('winterpad.configuration.db', function() {
+            configDb.init('winterpad.configuration.db', function () {
               $scope.notesRestUrl = configDb.query({
                 key: 'notesRestUrl'
               }).select('value')[0];
@@ -36,11 +36,10 @@
                 Note = null;
               }
 
-              notesDb.init('winterpad.notes.db', function() {
+              notesDb.init('winterpad.notes.db', function () {
                 syncNotes();
               });
             });
-
 
             function addCreatedNotesToRemote() {
               var notes = null;
@@ -88,7 +87,7 @@
             }
 
             function updateNoteView() {
-              $scope.notes = notesDb.query(function() {
+              $scope.notes = notesDb.query(function () {
                 return !this.deleteIt;
               }).order('modified desc').get();
             }
@@ -99,7 +98,7 @@
               removeDeletedNotesFromRemote();
               updateEditedNotesOnRemote();
               if (Utils.isOnline() && null !== Note) {
-                var notes = Note.query(function() {
+                var notes = Note.query(function () {
                   $scope.error = false;
                   var remoteNoteIds = _.pluck(notes, 'id');
                   var localNoteIds = notesDb.query().select('id');
@@ -108,7 +107,7 @@
                     id: localNoteIdsThatAreNotRemote
                   }).get();
                   var notesViewNeedsUpdate = ($scope.notes.length < 1 && notes.length > 1);
-                  localNotesThatAreNotRemote.forEach(function(possibleNoteToRemove) {
+                  localNotesThatAreNotRemote.forEach(function (possibleNoteToRemove) {
                     if (!possibleNoteToRemove.localOnly) {
                       possibleNoteToRemove.deleteIt = true;
                       notesDb.query.merge(possibleNoteToRemove, 'id');
@@ -120,7 +119,7 @@
                     updateNoteView();
                   }
                   setTimeout(syncNotes, 600000);
-                }, function(error) {
+                }, function (error) {
                   $scope.error = true;
                   $scope.message = error;
                   setTimeout(syncNotes, 600000);
@@ -131,7 +130,7 @@
               }
             }
 
-            $scope.saveNote = function(content) {
+            $scope.saveNote = function (content) {
               var note = {
                 id: Date.now(),
                 modified: Date.now(),
@@ -145,7 +144,7 @@
               addCreatedNotesToRemote();
             };
 
-            $scope.updateNote = function() {
+            $scope.updateNote = function () {
               var id = parseInt($('#noteContentForUpdate').data('note'), 10);
               var content = $('#noteContentForUpdate').val();
               var note = notesDb.query({
@@ -166,7 +165,7 @@
               $('#noteContentForUpdate').data('note', '');
             };
 
-            $scope.deleteNote = function() {
+            $scope.deleteNote = function () {
               var id = parseInt($('#noteIdToDelete').text(), 10);
               var note = notesDb.query({
                 id: {
@@ -190,16 +189,16 @@
               }
             };
 
-            $scope.openDialogForNoteDeletion = function(noteId) {
+            $scope.openDialogForNoteDeletion = function (noteId) {
               $('#noteIdToDelete').text(noteId);
             };
 
-            $scope.openDialogForNoteUpdate = function(noteId, noteContent) {
+            $scope.openDialogForNoteUpdate = function (noteId, noteContent) {
               $('#noteContentForUpdate').data('note', noteId);
               $('#noteContentForUpdate').val(noteContent);
             };
 
-            $scope.savePreferences = function(notesRestUrl, notesRestUsername, notesRestPassword) {
+            $scope.savePreferences = function (notesRestUrl, notesRestUsername, notesRestPassword) {
               configDb.query.merge({
                 key: 'notesRestUrl',
                 value: notesRestUrl
@@ -226,7 +225,7 @@
             function pushCreatedNote(note) {
               Note.save({
                 content: note.content
-              }).$promise.then(function(result) {
+              }).$promise.then(function (result) {
                 notesDb.query({
                   id: {
                     'is': note.id
@@ -234,7 +233,7 @@
                 }).remove();
                 notesDb.query.merge(result, 'id');
                 updateNoteView();
-              }, function(error) {
+              }, function (error) {
                 console.error('Error on remote note creation. ', error);
               });
             }
@@ -242,13 +241,13 @@
             function pushDeletedNote(note) {
               Note.remove({
                 id: note.id
-              }).$promise.then(function() {
+              }).$promise.then(function () {
                 notesDb.query({
                   id: {
                     'is': note.id
                   }
                 }).remove();
-              }, function(error) {
+              }, function (error) {
                 if (error.status === 404) {
                   notesDb.query({
                     id: {
@@ -266,11 +265,11 @@
                 id: note.id
               }, {
                 content: note.content
-              }).$promise.then(function(result) {
+              }).$promise.then(function (result) {
                 result.editedLocal = false;
                 notesDb.query.merge(result, 'id');
                 updateNoteView();
-              }, function(error) {
+              }, function (error) {
                 if (error.status === 404) {
                   console.warn('Note deleted on server. Delete it now locally.');
                   notesDb.query({
